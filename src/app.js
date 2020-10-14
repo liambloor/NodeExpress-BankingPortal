@@ -4,6 +4,7 @@ const express = require('express');
 const app = new express();
 
 app.use(express.static('./src/public'));
+app.use(express.urlencoded({ extended: true }))
 
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');
@@ -19,15 +20,18 @@ app.get('/', function(req, response) {
 });
 app.get('/savings', function(req, response) {
     response.render('account', {account: accounts.savings});
-})
+});
 app.get('/checking', function(req, response) {
     response.render('account', {account: accounts.checking});
-})
+});
 app.get('/credit', function(req, response) {
     response.render('account', {account: accounts.credit});
-})
+});
 app.get('/profile', function(req, res) {
     res.render('profile', {user: users[0]});
+});
+app.get('/transfer', function(req, res) {
+    res.render('transfer');
 })
 
 app.listen(3000, function() {
