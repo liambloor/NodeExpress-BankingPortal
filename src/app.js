@@ -32,6 +32,23 @@ app.get('/profile', function(req, res) {
 });
 app.get('/transfer', function(req, res) {
     res.render('transfer');
+});
+app.post('/transfer', function(req, res) {
+    accounts[req.body.from].balance -= req.body.amount;
+    accounts[req.body.to].balance += parseInt(req.body.amount, 10);
+    let accountsJSON = JSON.stringify(accounts);
+    fs.writeFileSync(path.join(__dirname + '/json/accounts.json'), accountsJSON, 'utf8');
+    res.render('transfer', {message: "Transfer Completed"});
+});
+app.get('/payment', function(req, res) {
+   res.render('payment', {account: accounts.credit});
+});
+app.post('/payment', function(req, res) {
+    accounts.credit.balance -= req.body.amount;
+    accounts.credit.available += parseInt(req.body.amount, 10);
+    let accountsJSON = JSON.stringify(accounts);
+    fs.writeFileSync(path.join(__dirname + '/json/accounts.json'), accountsJSON, 'utf8');
+    res.render('payment', {message: "Payment Successful", account: accounts.credit});
 })
 
 app.listen(3000, function() {
